@@ -1,0 +1,45 @@
+Modificaciones en Xinu para resolver las consignas del TP Obligatorio: 
+(Todo lo que se va a mencionar se encuentra en el Xinu de la carpeta 'xinu-final')
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+* Punto 1: Lograr reproducir el error mencionado anteriormente e intentar repararlo. El establecimiento de la conexión TCP es mediante el conocido protocolo de tres vı́as. Las conexiones podrı́an ser desde un cliente Xinu que se conecta a un servidor GNU/Linux que está escuchando.
+
+	- El código modificado está en el archivo 'tcbref.c', allí se modificó una condición dentro de la función 'tcbunref'.
+ 	- Se agregó un llamado a 'tcbref(tcbptr)' (inc. de referencias) en la función 'tcpsynsent'.
+
+	***Aclaración*** : Para probar el cliente que realiza conexión TCP para hacer un GET a un HTTP: 
+					'client gnu.msn.by 80 /'
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+* Punto 2: Identificar si la implementación de TCP provee control de congestión y control de flujo,
+proponer una forma para verificar su funcionamiento y describir la forma en que lo hace.
+
+Análisis realizado (con más detalle, en el informe): 
+
+Control de congestión:
+
+	- Depuración en la función 'tcp_update' (relacionado a la ventana de congestión) ---> (FUNCIONA),
+
+	- Depuración en la función 'tcp_synsent' (relacionado a la inicialización del umbral) y cambios del umbral para probar el cambio de fases ---> (FUNCIONA), 
+
+	- Depuración en la función 'tcp_out' (relacionado a la actualización de la ventana de congestión ante pérdida de paquetes por exp. del RTO) ---> (NO APARECE / NO FUNCIONA)
+
+Control de flujo:
+
+	- Se modificó temporalmente la ventana de recepción a 0 en las funciones 'tcpxmit', 'tcp_update', 'tcp_synsent' para frenar el flujo de envio de datos (NO FUNCIONA)
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+* Punto 3: Migrar el código fuente de un cliente TELNET open source a XINU. Verificar su funcio-
+namiento contra un servidor TELNET en una máquina GNU/LINUX o MAC.
+
+Se agregó la función 'xsh_telnet', que es una versión migrada a Xinu del cliente TELNET open source. La versión original del código fuente se encuentra disponible en el siguiente link:  
+					https://gist.github.com/legnaleurc/7638738
+
+***Aclaración*** : Se puede utilizar en el Shell de Xinu a través del comando 'telnet', incluyendo luego parámetros como dirección IP de la máquina GNU/Linux o Mac que ejecuta el servidor Telnet. También se puede incluir el puerto en el que se encuentra el server.
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
